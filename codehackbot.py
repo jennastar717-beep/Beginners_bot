@@ -1,3 +1,22 @@
+import os
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+# Render မအိပ်သွားစေရန် Web Server ပြုလုပ်ခြင်း
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is alive!")
+
+def run_web_server():
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(('0.0.0.0', port), SimpleHTTPRequestHandler)
+    server.serve_forever()
+
+# Background တွင် Web Server ကို သီးသန့် Run ခိုင်းထားမည်
+threading.Thread(target=run_web_server, daemon=True).start()
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ==============================================
